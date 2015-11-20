@@ -1,0 +1,90 @@
+doctype html
+html.no-js(ng-app='humansized' ng-controller="ApplicationCtrl" ng-cloak)
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width')
+    base(href="/")
+
+    title
+      | D3 Workshop by Mark Daggett
+
+    // Place favicon.ico and apple-touch-icon.png in the root directory
+    // link(href='//fonts.googleapis.com/css?family=Roboto:400,100' rel='stylesheet' type='text/css')
+    // build:css(.) styles/vendor.css
+    link(rel='stylesheet', href='bower_components/angular-material/angular-material.css')
+    link(rel='stylesheet', href='bower_components/codemirror/theme/neo.css')
+    // bower:css
+    // endbower
+    // endbuild
+    // build:css(.tmp) styles/main.css
+    link(rel='stylesheet', href='styles/main.css')
+    // endbuild
+
+  body(layout="column" ng-class="currentRoute()")
+    md-toolbar.md-menu-toolbar(layout="row" md-scroll-shrink)
+      div(layout="row")
+        md-toolbar-filler(layout layout-align="center center")
+          md-button.md-icon-button(ng-click="toggleSideNav()" aria-label="Settings")
+            i.mdi.mdi-menu
+        div
+          h2.md-toolbar-tools D3 Workshop by Mark Daggett
+          // md-menu-bar.lessonTools
+          //   button
+          //    | Display Answer
+
+    md-content.page-container(layout="column" layout-padding flex ng-view)
+    md-sidenav(class="md-sidenav-left md-whiteframe-z2" md-component-id="left")
+      md-toolbar
+        .md-toolbar-tools
+          h6.md-subhead Settings
+          span(flex)
+          md-button.md-icon-button(ng-click="close()" aria-label="close side nav")
+            i.mdi.mdi-close
+      md-content.options(layout-padding layout="column")
+        md-button(ng-click="goTo('/')" aria-label="Home")
+          i.mdi.mdi-home
+          | Home
+        md-button(ng-repeat="lesson in lessons" ng-click="selectLesson(lesson.slug, $index)" arial-label="lesson.label")
+          | {{$index + 1}} {{lesson.label }}
+      
+    // build:js(.) scripts/oldieshim.js
+    //if lt IE 9
+    script(src='bower_components/es5-shim/es5-shim.js')
+    script(src='bower_components/json3/lib/json3.min.js')
+    // endbuild
+
+    // build:js(.) scripts/vendor.js
+    // bower:js
+    script(src="bower_components/jquery/dist/jquery.js")
+    script(src="bower_components/angular/angular.js")
+    script(src="bower_components/angular-aria/angular-aria.js")
+    script(src="bower_components/angular-animate/angular-animate.js")
+    script(src="bower_components/angular-messages/angular-messages.js")
+    script(src="bower_components/angular-resource/angular-resource.js")
+    script(src="bower_components/angular-route/angular-route.js")
+    script(src="bower_components/angular-sanitize/angular-sanitize.js")
+    script(src="bower_components/angular-touch/angular-touch.js")
+    script(src="bower_components/angular-material/angular-material.js")
+    script(src="bower_components/codemirror/lib/codemirror.js")
+    script(src="bower_components/codemirror/mode/javascript/javascript.js")
+    script(src="bower_components/codemirror/mode/css/css.js")
+    script(src="bower_components/codemirror/mode/xml/xml.js")
+    script(src="bower_components/d3/d3.js")
+    script(src="bower_components/d3-geo-projection/d3.geo.projection.js")
+    script(src="bower_components/d4/d4.js")
+    // endbower
+    // endbuild
+
+    // build:js({.tmp,app}) scripts/scripts.js
+    script(src='scripts/constants.js')
+    script(src="scripts/namespace.js")
+    script(src="scripts/boot.js")
+    script(src="scripts/app.js")
+    script(src="scripts/controllers/application.js")
+    script(src="scripts/directives/codemirror.js")
+    script(src="scripts/directives/iframe-preview.js")
+    script(src="scripts/services/text-utils.js")
+    script(src="scripts/modules/lessons/lessons.js")
+    script(src="scripts/modules/lessons/controllers/lessons.js")
+    // endbuild

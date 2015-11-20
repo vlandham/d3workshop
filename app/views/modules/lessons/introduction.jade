@@ -1,0 +1,65 @@
+div(id="description")
+  h3.md-headline Introduction
+  p.md-body-1 D3 is a wonderful tool for drawing with data. While D3 is not a charting library, many developers use D3 to create charts. Mike Bostock, the creator of D3, describes the project this way:
+  .blockquote
+    p.md-body-1 “D3.js is a JavaScript library for manipulating documents based on data. D3 helps you bring data to life using HTML, SVG, and CSS. D3’s emphasis on web standards gives you the full capabilities of modern browsers without tying yourself to a proprietary framework, combining powerful visualization components and a data-driven approach to DOM manipulation.”
+  p.md-body-1 This workshop will allow us to explore and learn many of the core concepts of D3. The most important feature of the library is to seamlessly bind data to the browser’s document object model (DOM). The perfect first lesson is learning how D3 binds data to the DOM. This simple example takes an array of integers and maps them to a series of DIV elements. 
+      
+  h3.md-title Takeaways
+  p.md-body-1 It is important to understand that D3 is not a charting library. This distinction is essential, because although this workshop deals exclusively with creating charts, D3 can be used for much more. 
+
+style(id="css").
+  .fill {
+    fill: #ccc;
+  }
+
+  .stroke {
+    fill: none;
+    stroke: #000;
+    stroke-width: 20px;
+  }
+script(id='data').
+
+script(id='javascript').
+
+  // Example from: http://bl.ocks.org/mbostock/bc4e32ec71636b498c46
+  d3.select(this)
+    .on("touchstart", animate)
+    .on("click", animate)
+    .on("load", animate);
+
+  function animate() {
+  var delay = 0,
+      stroke = d3.selectAll(".stroke");
+
+  // First cancel any active or scheduled transitions.
+  stroke.interrupt().transition();
+
+  // Then schedule the new transition.
+  stroke.transition().each(function() {
+    var length = this.getTotalLength(),
+        duration = length * 10;
+
+    d3.select(this)
+        .style("display", null)
+        .style("stroke-dasharray", "0," + length)
+      .transition()
+        .delay(delay)
+        .duration(duration)
+        .style("stroke-dasharray", length + "," + length);
+
+    delay += duration;
+  });
+  }
+
+div(id="html")
+  svg(viewBox="-2 -2 100 95")
+    defs
+      path(id="dee" d="M0,0h7.75a45.5,45.5 0 1 1 0,91h-7.75v-20h7.75a25.5,25.5 0 1 0 0,-51h-7.75z")
+      path(id="three" d="M36.2510,0h32a27.75,27.75 0 0 1 21.331,45.5a27.75,27.75 0 0 1 -21.331,45.5h-32a53.6895,53.6895 0 0 0 18.7464,-20h13.2526a7.75,7.75 0 1 0 0,-15.5h-7.75a53.6895,53.6895 0 0 0 0,-20h7.75a7.75,7.75 0 1 0 0,-15.5h-13.2526a53.6895,53.6895 0 0 0 -18.7464,-20z")
+      clipPath(id="clip-three")
+        use(xlink:href="#three")
+    use(class="fill" xlink:href="#dee")
+    use(class="fill" xlink:href="#three")
+    path(class="stroke" style="display:none;" d="M0,10h7.75a35.5,35.5 0 1 1 0,71h-7.75")
+    path(class="stroke" style="display:none;" clip-path="url(#clip-three)" d="M36.2510,10h32a17.75,17.75 0 0 1 0,35.5h-7.75h7.75a17.75,17.75 0 0 1 0,35.5h-32")

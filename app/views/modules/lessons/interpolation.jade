@@ -1,0 +1,219 @@
+div(id="description")
+  h3.md-headline Interpolate
+  
+  p.md-body-1 Interpolation is the process of constructing interstitial points between ranges of known points. This is very important in charting because often charts require the ability to connect points together in a variety of different methods. The D3 interpolate module affords the developer a number of ways of transitioning between two known values. D3, can blend between colors, strings, arrays, and even deeply nested objects. 
+  p.md-body-1 Consider the following example:
+  pre
+    code.
+      var i = interpolateNumber(10, 20);
+      i(0.0); // 10
+      i(0.2); // 12
+      i(0.5); // 15
+      i(1.0); // 20
+
+  p.md-body-1 Developers can also create their own interpolators, either by registering their interpolator with D3 or by calling the interpolate function and providing a custom interpolate function directly.
+
+  h3.md-title Exercises
+  
+  ol
+    li.md-body-1 Try interpolating between values from within the developer console or diretly to the chart itself.
+    li.md-body-1 Create your own custom interpolator and update the line segments using it.
+  
+  h3.md-title Takeaways
+  
+  p.md-body-1 D3 allows you to easy blend between two known values using the interpolation functionality.
+  
+  h3.md-title References
+  ul
+    li.md-body-1 
+      a(href='http://bl.ocks.org/mbostock/22c3971eed37127f2ba8') http://bl.ocks.org/mbostock/22c3971eed37127f2ba8
+
+style(id="css").
+  body {
+    font: 13px sans-serif;
+    position: relative;
+  }
+
+  form {
+    position: absolute;
+    top: 40px;
+    left: 10px;
+  }
+  svg{
+    border: 1px solid #EDEDED;
+    outline:none !important;
+  }
+
+  rect {
+    fill: none;
+    pointer-events: all;
+  }
+
+  circle, .line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+  }
+
+  circle {
+    fill: #fff;
+    fill-opacity: .2;
+    cursor: move;
+  }
+
+  .selected {
+    fill: #ff7f0e;
+    stroke: #ff7f0e;
+  }
+
+
+script(id='data').
+
+script(id='javascript').
+
+  // http://bl.ocks.org/mbostock/4342190
+  var sq = Math.min($('body').width(), $('body').height());
+  var width = $('body').width()-2,
+      height = sq;
+
+  var points = d3.range(1, 5).map(function(i) {
+      return [i * width / 5, 50 + Math.random() * (height - 100)];
+  });
+
+  var dragged = null,
+      selected = points[0];
+
+  var line = d3.svg.line();
+
+  var svg = d3.select("#svg")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("tabindex", 1);
+
+  svg.append("rect")
+      .attr("width", width)
+      .attr("height", height)
+      .on("mousedown", mousedown);
+
+  svg.append("path")
+      .datum(points)
+      .attr("class", "line")
+      .call(redraw);
+
+  d3.select(window)
+      .on("mousemove", mousemove)
+      .on("mouseup", mouseup)
+      .on("keydown", keydown);
+
+  d3.select("#interpolate")
+      .on("change", change)
+      .selectAll("option")
+      .data([
+          "linear",
+          "step-before",
+          "step-after",
+          "basis",
+          "basis-open",
+          "basis-closed",
+          "cardinal",
+          "cardinal-open",
+          "cardinal-closed",
+          "monotone"
+      ])
+      .enter().append("option")
+      .attr("value", function(d) {
+          return d;
+      })
+      .text(function(d) {
+          return d;
+      });
+
+  svg.node().focus();
+
+  function redraw() {
+      svg.select("path").attr("d", line);
+
+      var circle = svg.selectAll("circle")
+          .data(points, function(d) {
+              return d;
+          });
+
+      circle.enter().append("circle")
+          .attr("r", 1e-6)
+          .on("mousedown", function(d) {
+              selected = dragged = d;
+              redraw();
+          })
+          .transition()
+          .duration(750)
+          .ease("elastic")
+          .attr("r", 6.5);
+
+      circle
+          .classed("selected", function(d) {
+              return d === selected;
+          })
+          .attr("cx", function(d) {
+              return d[0];
+          })
+          .attr("cy", function(d) {
+              return d[1];
+          });
+
+      circle.exit().remove();
+
+      if (d3.event) {
+          d3.event.preventDefault();
+          d3.event.stopPropagation();
+      }
+  }
+  
+  function squiggle(points) { 
+    return points.join("A 1,1 0 0 1 "); 
+  }
+
+  function change() {
+      line.interpolate(this.value);
+      redraw();
+  }
+
+  function mousedown() {
+      points.push(selected = dragged = d3.mouse(svg.node()));
+      redraw();
+  }
+
+  function mousemove() {
+      if (!dragged) return;
+      var m = d3.mouse(svg.node());
+      dragged[0] = Math.max(0, Math.min(width, m[0]));
+      dragged[1] = Math.max(0, Math.min(height, m[1]));
+      redraw();
+  }
+
+  function mouseup() {
+      if (!dragged) return;
+      mousemove();
+      dragged = null;
+  }
+
+  function keydown() {
+      if (!selected) return;
+      switch (d3.event.keyCode) {
+          case 8: // backspace
+          case 46:
+              { // delete
+                  var i = points.indexOf(selected);
+                  points.splice(i, 1);
+                  selected = points.length ? points[i > 0 ? i - 1 : 0] : null;
+                  redraw();
+                  break;
+              }
+      }
+  }
+
+
+div(id="html")
+  svg#svg
+  form
+    label(for="interpolate") Interpolate:
+    select(id="interpolate")

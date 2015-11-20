@@ -1,0 +1,22 @@
+//COLOR DEFAULTS
+/** Name: syntax:
+ ** 1. [s] = humansized  (Does Not Change)
+ ** 2. [c] = color (Does Not Change)
+ ** 3. [x] = identifier color (EX: Slate)
+ **
+ **
+ ** Colors should be derived from custom humansized or defaults pallets choosen in the apps.js.
+ ** For a full listing of colors for each pallet, see http://www.google.com/design/spec/style/color.html# */
+
+//BLUE
+$scLightBlue: #36B8F4;
+$scDarkBlue: #1d87b7;
+
+//GREY
+$scLightGrey: #EEEEEE;
+$scMediumGrey: #BDBDBD;
+$scMDarkGrey: #616161;
+$scDarkGrey: #212121;
+
+//OTHER DEFAULTS
+$scBackground: #fafafa;

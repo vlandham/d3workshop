@@ -1,0 +1,39 @@
+md-content.md-whiteframe-1dp(ng-show="error" layout layout-sm="column" layout-padding flex layout-align="center center")
+  p.md-title 
+    strong 
+      i.mdi.mdi-alert-triangle
+      | Error: 
+    span Lesson could not be loaded. Please try again.
+  
+div(ng-hide="error" layout layout-sm="column" layout-padding flex)
+  md-content.md-whiteframe-1dp.code-panel(layout="column" flex)    
+    md-tabs(md-dynamic-height md-border-bottom flex)
+      md-tab(label="Intro")
+        md-content.md-padding
+          div(ng-bind-html="content.description")
+          md-button.md-raised.md-primary(ng-click="nextLesson()")
+            | Next Lesson
+
+      md-tab(label="Data")
+        md-content.md-padding
+          textarea(ng-model="content.data")
+          code-editor(syntax="javascript" theme="neo" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 800, 'blur': 0 } }" ng-model="content.data" flex)
+
+      md-tab(label="JavaScript")
+        md-content.md-padding
+          textarea(ng-model="content.javascript")
+          code-editor(syntax="javascript" theme="neo" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 800, 'blur': 0 } }" ng-model="content.javascript" flex)
+
+      md-tab(label="CSS")
+        md-content.md-padding
+          textarea(ng-model="content.css")
+          code-editor(syntax="css" theme="neo" ng-model="content.css" flex)
+
+      md-tab(label="HTML")
+        md-content.md-padding
+          textarea(ng-model="content.html")
+          code-editor(syntax="xml" theme="neo" ng-model="content.html" flex)
+
+  .md-whiteframe-3dp.code-preview(layout="column" flex layout-padding)
+    iframe(iframe-preview data-str="str" flex)
+    

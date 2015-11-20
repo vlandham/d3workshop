@@ -1,0 +1,21 @@
+.LessonsCtrl{
+  .lessonTools {
+    display:none;
+  }
+}
+.LessonCtrl{
+  .blockquote {
+    padding-left:16px;
+    border-left: 4px solid #EDEDED;
+    font-style: italic;
+  }
+  .lessonTools {
+    display:block;
+  }
+  iframe {
+    border: none;
+  }
+  .code-panel, .code-preview {
+    background-color: #fff;
+  }
+}

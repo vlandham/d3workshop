@@ -1,0 +1,11 @@
+node_modules
+www
+www.zip
+.tmp
+.sass-cache
+.DS_Store
+aws.json
+bower_components
+.divshot-cache
+reports
+app/scripts/constants.js

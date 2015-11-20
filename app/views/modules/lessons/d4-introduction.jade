@@ -1,0 +1,61 @@
+div(id="description")
+  h3.md-headline D4 Hello Chart
+  p.md-body-1 I will introduce you to D4 a domain specific language (DSL) for creating reusable charts with D3. Anyone who has done even a cursory amount of research into data visualization tools knows that reusable charts are a hit or miss proposition. Poorly constructed charts fail because they do not harness our visual and spatial reasoning skills. These capabilities have been refined over a millennia to quickly isolate, synthesize, and then evaluate the environment around us. Successful charts harness these skills to afford the viewer a means to quickly understand data visually. Gary Klass describes the goal of charts this way:
+  .blockquote
+    p.md-body-1 A graphical chart provides a visual display of data that otherwise would be presented in a table; a table, one that would otherwise be presented in text. Ideally, a chart should convey ideas about the data that would not be readily apparent if they were displayed in a table or as text.
+  p.md-body-1 As Klass points out, charts are not about displaying data, they are about conveying ideas through data. Successful charts are therefore succinct, self-explanatory visual systems which typically answer questions about the comparison, composition, distribution or interrelationship in the data they present. To do this effectively, charts need to be “fit for purpose,” which often means being tuned by hand. This bespoke approach is frequently at odds with crafting a chart out of off-the-shelf parts. Unfortunately, visual expressiveness is often the first quality scraped away when trying to wedge an idea into a reusable chart.
+  p.md-body-1 The purpose of D4 is to codify a collection of best practices around reusable charts and abstract away some of the drudgery of creating, configuring and deploying the charts. In this lesson we’ll look at some of the basic features that make up a chart in D4.
+  
+style(id="css").
+  #chart  .d4 .bar.negative.fill {
+      fill: darkred;
+  }
+  #chart .d4 .bar.positive.fill {
+      fill: steelblue;
+  }
+  #chart .d4 .bar.subtotal.fill {
+      fill: lightblue;
+  }
+
+
+script(id='data').
+
+  var data = [
+    { 'category': 'Job',       'value': 27  },
+    { 'category': 'Groceries', 'value': -3  },
+    { 'category': 'Allowance', 'value': 22  },
+    { 'category': 'Subtotal',  'value': 'e' },
+    { 'category': 'Videos',    'value': -22 },
+    { 'category': 'Coffee',    'value': -4  },
+    { 'category': 'Total',     'value': 'e' }
+  ];
+
+script(id='javascript').
+  var parsedData = d4.parsers.waterfall()
+      .x(function() {
+          return 'category';
+      })
+      .y(function() {
+          return 'value';
+      })
+      .nestKey(function() {
+          return 'category';
+      })(data);
+
+  var chart = d4.charts.waterfall()
+      .width($('#chart').width())
+      .x(function(x) {
+          x.key('category');
+      })
+      .y(function(y) {
+          y.key('value');
+      });
+
+  d3.select('#chart')
+      .datum(parsedData.data)
+      .call(chart);
+
+
+
+div(id="html")
+  #chart

@@ -1,0 +1,103 @@
+div(id="description")
+  h3.md-headline Working With Selections
+  p.md-body-1 
+    | The previous lesson explained how D3 uses contextual cycles to update, add or remove a selection of nodes from the DOM. The 
+    code.code enter()
+    | , and 
+    code.code exit()
+    | , functions are examples of performing operations on a group of DOM elements, which D3 calls selections. In this lesson we’ll explore several other useful functions that you can perform on selections. 
+  p selection.append(name)
+  p.md-body-1 This function inserts an element into the DOM within the context of the current selection. Our previous lessons have used this function extensively.
+  p selection.insert(name[,before])
+  p.md-body-1 
+    | Insert, like append, adds items to the DOM at a particular location. Whereas 
+    code.code append() 
+    | inserts an item inside the selection, 
+    code.code insert() 
+    | adds the new element in front all elements that match the before argument.
+  p selection.remove()
+  p.md-body-1 
+    | The remove function will iterate over items within the selection and delete each one from the DOM. For example, imagine you wanted to remove all the unused DOM elements once a chart’s data is updated. You’d simply call 
+    code.code selection.exit().remove()
+    | , which would remove only the nodes D3 has determined are not linked to items in the data array.
+  p selection.attr(name[,value])
+  p.md-body-1 
+    | The 
+    code.code attr() 
+    | function allows you to assign a DOM attribute to all elements in the current selection. This is especially useful if you want to consider each element individually and apply an attribute only if some precondition is met. The 
+    code.code attr() 
+    | function has a sibling named 
+    code.code property()
+    | , which allow you to access properties of elements that are not accessible from the 
+    code.code attr() 
+    | function. For example, the “checked” property of a checkbox element can only be set using the 
+    code.code property() 
+    function.
+  p selection.html([value])
+  p.md-body-1 
+    | As the name suggests, this function allows you to replace the children nodes of a selection with a string of HTML. This is the equivalent of calling 
+    code.code innerHTML() 
+    | on a DOM element.
+  p selection.text([value])
+  p.md-body-1 
+    | The 
+    code.code text() 
+    | function will replace all child nodes of a selection with an arbitrary text string supplied as an argument.
+
+  h5.md-title Exercises
+  ol
+    li.md-body-1 Using the existing CSS classes, try and assign the red CSS classes to the first and last data elements.
+    li.md-body-1 Insert the word “last” before the last item and “first” before the first item.
+
+  h5.md-title Takeaways
+  p.md-body-1 
+    | Selections can be modified in many different ways using D3. For a complete example of the functions available to selections consult the documentation here: 
+    a(href="https://github.com/mbostock/d3/wiki/Selections" target="_new") https://github.com/mbostock/d3/wiki/Selections
+  
+style(id="css").
+  #chart div {
+    font: 10px sans-serif;
+    background-color: steelblue;
+    text-align: right;
+    padding: 3px;
+    margin: 1px;
+    color: white;
+  }
+  #chart div[alert="true"] {
+    background-color:#f00;
+  }
+
+script(id='data').
+  var data = [1,2,5,4];
+
+script(id='javascriptAnswer').
+  var selection = d3.select("#chart")
+  .selectAll("div")
+  .data(data)
+
+  selection
+  .enter().append('div')
+  .attr('alert', function(d, i){
+    return (i === 0 || i === data.length -1)
+  })
+  .style("width", function(d) { return d * 10 + "px"; })
+  .text(function(d) { return d; });
+
+  d3.select("#chart")
+  .insert('p', ':last-child').text('last');
+
+  d3.select("#chart")
+  .insert('p', ':first-child').text('first');
+
+script(id='javascript').
+  var selection = d3.select("#chart")
+  .selectAll("div")
+  .data(data)
+  
+  selection
+  .enter().append('div')
+  .style("width", function(d) { return d * 10 + "px"; })
+  .text(function(d) { return d; });
+  
+div(id="html")
+  div#chart

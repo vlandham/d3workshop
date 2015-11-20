@@ -1,0 +1,51 @@
+doctype html
+html
+  head
+    title
+    script(src="/vendor/jquery.js")
+    script(src="/vendor/d3.js")
+    script(src="/vendor/d4.js")
+    style.
+      html, body,#chart {
+        overflow:auto;
+        min-height:100%;
+        height:100%;
+      }
+      svg.d4 {
+        font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+        font-size:11px;
+      }
+      .d4 .brush .extent {
+          fill : rgba(0,0,0,0.2);
+      }
+      .d4 .tick text {
+          font-size: 9px;
+          fill: #999;
+          shape-rendering: crispEdges;
+      }
+
+      .d4 .axis .domain, .d4 .axis .tick line {
+        fill: none;
+        stroke: #999;
+        stroke-width: 1px;
+        shape-rendering: crispEdges;
+      }
+
+      .d4 .line, .d4 path, .d4 .connectors line {
+          fill: none;
+          stroke: #222;
+          stroke-width: 1px;
+      }
+
+      .d4 .zeroLine line {
+          stroke-width:1px;
+          stroke: #555;
+      }
+
+  body
+    style
+      | {{css}}
+    | {{html}}
+    script
+      | {{data || 'var data = []'}};
+      | {{javascript}}

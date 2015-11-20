@@ -1,0 +1,66 @@
+div(id="description")
+  h3.md-headline 
+  h5.md-title Exercises
+  h5.md-title Takeaways
+  
+style(id="css").
+  .d4 .negative.fill {
+    fill: #CD202C;
+  }
+
+  .d4 .positive.fill {
+    fill: #002960;
+  }
+
+
+script(id='data').
+
+  var data = [
+      { year: '2010', unitsSold:-100, salesman : 'Bob' },
+      { year: '2011', unitsSold:200, salesman : 'Bob' },
+      { year: '2012', unitsSold:300, salesman : 'Bob' },
+      { year: '2013', unitsSold:400, salesman : 'Bob' },
+      { year: '2014', unitsSold:500, salesman : 'Bob' },
+      { year: '2010', unitsSold:100, salesman : 'Gina' },
+      { year: '2011', unitsSold:100, salesman : 'Gina' },
+      { year: '2012', unitsSold:-100, salesman : 'Gina' },
+      { year: '2013', unitsSold:500, salesman : 'Gina' },
+      { year: '2014', unitsSold:600, salesman : 'Gina' },
+      { year: '2010', unitsSold:400, salesman : 'Average' },
+      { year: '2011', unitsSold:0, salesman : 'Average' },
+      { year: '2012', unitsSold:400, salesman : 'Average' },
+      { year: '2013', unitsSold:400, salesman : 'Average' },
+      { year: '2014', unitsSold:400, salesman : 'Average' }
+    ];
+
+script(id='javascript').
+  var parsedData = d4.parsers.nestedGroup()
+    .x('year')
+    .y('unitsSold')
+    .value('unitsSold')(data);
+
+  var chart = d4.charts.groupedColumn();
+  chart
+  .outerWidth($('#chart').width())
+  .x(function(x){
+    x.key('year');
+
+    // Just for fun lets reduce the outer padding of the column chart.
+    // This also shows how d4 transparently passes the appropriate calls to d3.
+    x.rangeRoundBands([0, chart.width()], 0.2, 0.1);
+  })
+  .groups(function(groups) {
+    groups.key('salesman');
+  })
+  .y(function(y){
+    y.key('unitsSold');
+  })
+  .groupsOf(parsedData.data[0].values.length);
+
+  d3.select('#chart')
+  .datum(parsedData.data)
+  .call(chart);
+
+
+div(id="html")
+  #chart

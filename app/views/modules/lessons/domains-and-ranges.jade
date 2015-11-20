@@ -1,0 +1,53 @@
+div(id="description")
+  h3.md-headline Domains & Ranges
+  p.md-body-1 In the lessons so far, we mapped with width of the columns to the screen’s pixels values. This works well for small numbers. However, if we use a large numbers, the columns extend too far and disappear off the right of the screen. It is insufficient to use absolute pixel values as the basis for sizing in our charts. D3’s ranges normalize the data values so that they work well within the available visible space. Using ranges, we can specify the minimum and maximum values to be used when mapping the data to a corresponding visual area.
+  p.md-body-1 Another visual problem with our current approach is that the largest and smallest values are always slammed right up against the edge of the code editor. It would be nice if we could provide some visual breathing room. To do this, we will set the data domain. This determines the extremes of the data which can be represented within our chart. In general, domains can either be discrete i.e. a set of categories, or continuous such as dates and numbers.
+
+  h5.md-title Exercises
+    ol
+      li.md-body-1 Try making the largest item end in the middle of the screen.
+      li.md-body-1 Try truncating the largest item.
+      li.md-body-1 Try excluding the smallest item
+      li.md-body-1 
+        | Try calculating the domain using D3's helper methods like 
+        code.code d3.min()
+        | ,
+        code.code d3.max()
+        | or
+        code.code d3.extent()
+
+  h5.md-title Takeaways
+  p.md-body-1 Typically, domains vary depending on the data, while ranges are mostly constant. 
+  
+style(id="css").
+  #chart {
+    border: 1px solid #EDEDED;
+  }
+  #chart div {
+    font: 10px sans-serif;
+    background-color: steelblue;
+    text-align: right;
+    padding: 3px;
+    margin: 1px;
+    color: white;
+  }
+
+script(id='data').
+  var data = [1,2,5,4];
+
+script(id='javascript').
+  var scale =   d3.scale.linear()
+    .domain([0,d3.max(data)])
+    .range([0,$('#chart').width()-6])
+
+  var selection = d3.select("#chart")
+  .selectAll("div")
+  .data(data)
+  .enter().append('div')
+  .style("width", function(d) { 
+    return scale(d) + 'px'; 
+  })
+  .text(function(d) { return d; });
+
+div(id="html")
+  div#chart

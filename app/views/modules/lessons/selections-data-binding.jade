@@ -1,0 +1,46 @@
+div(id="description")
+  h3.md-headline Selections & Databinding
+  
+  p.md-body-1 In this example, if we adjust the values of the data array, the chart on the right will also change. This is because D3 bound the browser’s elements to the individual items in the data array. The process of linking DOM elements to data items is not surprisingly called “databinding.” D3 affords the developer the ability to programmatically bind these elements through the process of creating selections. Selections are subroutines which allow for an arbitrary number of nodes to be collected and iterated over. Moreover, these selections can be chained together allowing D3 to perform complex operations as a group, and yet still be understood by the developer as distinct chunks of code. 
+  p.md-body-1 The process of creating selections should look very familiar to anyone who has used jQuery. In fact, the DOM selection library used by JQuery (Sizzle) is also used by D3.
+  p.md-body-1 
+    | D3 binds the incoming data to the DOM using the 
+    code.code data() 
+    | function. To bind data, you must tell D3 what selection of nodes to use. Then you may assign the data to the proposed selection. It is important to note that D3 does not require these elements to already exist in the DOM at the point at which they are selected for databinding.
+
+  h5.md-title Exercises
+  ol
+    li.md-body-1 Try adding and removing numbers from the data array. What happens to the chart on the right?
+    li.md-body-1 What happens if you use a negative number?
+    li.md-body-1 What happens if you use a string like “foo”?
+    li.md-body-1 What happens if you use a really large number?
+  
+  h5.md-title Takeaways
+  p Creating and modifying selections is the way D3 changes the browser’s DOM to render the visualization.
+
+style(id="css").
+  #chart div {
+    font: 10px sans-serif;
+    background-color: steelblue;
+    text-align: right;
+    padding: 3px;
+    margin: 1px;
+    color: white;
+  }
+
+script(id='data').
+  var data = [1,2,3,4];
+
+script(id='javascript').
+  d3.select("#chart")
+  .selectAll("div")
+  .data(data)
+  .style("width", function(d) { return d * 10 + "px"; })
+  .text(function(d) { return d; });
+
+div(id="html")
+  div#chart
+    div#one
+    div#two
+    div#thee
+    div#four

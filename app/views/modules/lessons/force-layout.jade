@@ -1,0 +1,99 @@
+div(id="description")
+  h3.md-headline Force Layouts
+  p.md-body-1 In this lesson, we will explore one of the most common layouts available in D3, the force layout. Before we dive into the specifics of the force layout, let’s take a step back and discuss layouts in the most general sense. According to D3’s documentation, layouts are:
+  
+  .blockquote
+    p.md-body-1 "A layout encapsulates a strategy for laying out data elements visually, relative to each other. It could be a simple as stacking bars in a chart (where the base of one bar depends on the height of any below it) or as complex as labeling a map (by shifting labels around until overlap with conflicting map features is minimized). Layouts take a set of input data, apply an algorithm or heuristic, and output the resulting positions/shapes for a cohesive display of the data.
+    p.md-body-1 Layouts are not unlike d3.svg path generators, in that they facilitate the conversion of data to display form. However, layouts typically operate across a collection of data as a whole, rather than individually. Furthermore, the results of a layout could be used anywhere, not just with SVG."
+  
+  p.md-body-1 Now that we have a solid understanding of layouts, let’s take a look at the specifics of the force layout. Force directed graphs use algorithms to place nodes within a composition relative to some force value assigned to the set of edges. Forces can either attract or repel from each other, but they are most effective when trying to mass position nodes in such a way to minimized overlap, or intersection. In this example, we see a field of nodes, which do their best to position themselves equidistant from one another. However, as you introduce the mouse, you can see the nodes try and distance themselves from it while still preserving a consistent space between one another.
+
+  h5.md-title Exercises
+    ol
+      li.md-body-1 Try changing the charge function so that the dots are closer together.
+  
+style(id="css").
+  
+
+script(id='data').
+  var w = $('body').width();
+  var h = $('body').height();
+  var data = d3.range(200).map(function() {
+    return {
+      x: Math.random() * w,
+      y: Math.random() * h
+    };
+  });
+
+script(id='javascript').
+
+  // Based on Mike Bostock's example http://bl.ocks.org/mbostock/c6966db1fcb0ed2988da
+  var width = $('body').width(),
+      height = $('body').height(),
+      τ = 2 * Math.PI,
+      maxLength = 100,
+      maxLength2 = maxLength * maxLength;
+
+  var force = d3.layout.force()
+      .size([width, height])
+      .nodes(data.slice())
+      .charge(function(d, i) { return i ? -30 : -1500; })
+      .on("tick", ticked)
+      .start();
+
+  var voronoi = d3.geom.voronoi()
+      .x(function(d) { return d.x; })
+      .y(function(d) { return d.y; });
+
+  var root = data.shift();
+
+  root.fixed = true;
+
+  var canvas = d3.select("body").append("canvas")
+      .attr("width", width)
+      .attr("height", height)
+      .on("ontouchstart" in document ? "touchmove" : "mousemove", moved);
+
+  var context = canvas.node().getContext("2d");
+
+  function moved() {
+    var p1 = d3.mouse(this);
+    root.px = p1[0];
+    root.py = p1[1];
+    force.resume();
+  }
+
+  function ticked() {
+    var links = voronoi.links(data);
+
+    context.clearRect(0, 0, width, height);
+
+    context.beginPath();
+    for (var i = 0, n = links.length; i < n; ++i) {
+      var link = links[i],
+          dx = link.source.x - link.target.x,
+          dy = link.source.y - link.target.y;
+      if (dx * dx + dy * dy < maxLength2) {
+        context.moveTo(link.source.x, link.source.y);
+        context.lineTo(link.target.x, link.target.y);
+      }
+    }
+    context.lineWidth = 1;
+    context.strokeStyle = "#bbb";
+    context.stroke();
+
+    context.beginPath();
+    for (var i = 0, n = data.length; i < n; ++i) {
+      var node = data[i];
+      context.moveTo(node.x, node.y);
+      context.arc(node.x, node.y, 2, 0, τ);
+    }
+    context.lineWidth = 3;
+    context.strokeStyle = "#fff";
+    context.stroke();
+    context.fillStyle = "#000";
+    context.fill();
+  }
+
+
+div(id="html")

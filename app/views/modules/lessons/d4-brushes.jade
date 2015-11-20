@@ -1,0 +1,90 @@
+div(id="description")
+  h3.md-headline D4 Brushes
+  p.md-body-1 
+    | This example demonstrates how to use a d3 brush with d4 to select items within a chart. This example is based off an 
+    a(href="https://github.com/mbostock/d3/blob/v2.9.0/examples/brush/brush.html") older d3 brush example
+    |. Brushes in d3 are a means for selecting an arbitrary number of data elements within a chart. Typically this is done by creating a brush area and dragging it around the chart area.
+  p.md-body-1 
+    | The purpose of this example is to give a simple example of how you might tie in a d3 brush into a chart using d4. For more details on how brushes work 
+    a(href="https://github.com/mbostock/d3/wiki/SVG-Controls#brush") consult the d3 documentation
+    | directly.
+  
+  h3.md-title Exercises
+    ol
+      li.md-body-1 Display the data selected by the brush.
+      
+  h3.md-title Takeaways
+
+style(id="css").
+  #brushable circle {
+    -webkit-transition: fill-opacity 250ms linear !important;
+  }
+  #brushable .d4.selecting circle {
+      fill-opacity: 0.2;
+  }
+  #brushable .d4.selecting circle.selected {
+      stroke: #f00;
+  }
+
+script(id='data').
+  var random = d3.random.normal(0.5, 0.1);
+  var data = d3.range(800).map(function() { 
+    return [random(), random(), 3.5]; 
+  });
+
+
+script(id='javascript').
+  'use strict';
+
+  $(document).ready(function(){
+    var chart = d4.charts.scatterPlot()
+    .outerWidth($('#brushable').width())
+    .x(function(x){
+      x.scale('linear')
+      .min(0)
+      .max(1.0)
+      .key(0);
+    })
+    .y(function(y){
+      y.scale('linear')
+      .min(0)
+      .max(1.0)
+      .key(1);
+    })
+    .using('circles', function(circle){
+
+      /*
+        To make a svg element selectable by the brush simply give it the
+        "brushable" class. In this example we override the classes accessor
+        of the circles feature to give each circle drawn to the chart the
+        "brushable" class.
+
+        Using a class-based approach is only one way to
+        handle the selection of brushable items. Check the other examples for
+        a more detailed exploration of how brushes can be used in d4.
+      */
+      circle.classes(function () {
+        return 'brushable';
+      })
+      .r(3.5);
+    })
+    .mixout('circleLabels')
+    .mixin({'name' : 'brush', 'feature' : d4.features.brush })
+    .using('brush', function(brush){
+      /*
+        In order to drag a brush around the chart you must specify the
+        dimensions it must be aware of. In this case we specify that the
+        brush will use both the x and y dimensions, which will allow the
+        brush to be resized on all four sides.
+      */
+      brush.x(this.x);
+      brush.y(this.y);
+    });
+
+    d3.select('#brushable')
+    .datum(data)
+    .call(chart);
+  });
+
+div(id="html")
+  #brushable

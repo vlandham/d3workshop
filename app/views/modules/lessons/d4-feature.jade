@@ -1,0 +1,149 @@
+div(id="description")
+  h3.md-headline D4 Features
+  p.md-body-1 A feature of a chart is a visual component, which helps convey meaning in the data. Charts are made up of features whether it be an xAxis, or a series of columns, or a contiguous line.
+
+  h5.md-title Exercises
+  h5.md-title Takeaways
+  
+style(id="css").
+  #chart {
+    width: 100%;
+  }
+  circle.selected {
+    fill: rgba(200,0,0,0.5);
+  }
+
+
+script(id='data').
+
+  // Create 200 data elements which we can draw to the screen.
+  var data = d3.range(200).map(function() {
+    return {
+      oldRadius: 10
+    };
+  });
+
+
+script(id='javascript').
+
+  var $example = $('#chart');
+
+    // collision detection routine
+    var collide = function(node) {
+      var r = node.radius + 16,
+        nx1 = node.x - r,
+        nx2 = node.x + r,
+        ny1 = node.y - r,
+        ny2 = node.y + r;
+      return function(quad, x1, y1, x2, y2) {
+        if (quad.point && (quad.point !== node)) {
+          var x = node.x - quad.point.x,
+            y = node.y - quad.point.y,
+            l = Math.sqrt(x * x + y * y),
+            r = node.radius + quad.point.radius;
+          if (l < r) {
+            l = (l - r) / l * 0.5;
+            node.x -= x *= l;
+            node.y -= y *= l;
+            quad.point.x += x;
+            quad.point.y += y;
+          }
+        }
+        return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+      };
+    };
+
+    d4.feature('forcedCircle', function(name) {
+      var force = d3.layout.force();
+      return {
+        accessors: {},
+        force: force,
+        render: function(scope, data, selection) {
+          var group = d4.appendOnce(selection, 'g.' + name);
+          var circles = group.selectAll('circle')
+            .data(data);
+          circles
+            .enter().append('circle')
+            .attr('r', function(d) {
+              return d.radius;
+            });
+
+          return circles;
+        }
+      };
+    });
+
+    var chart = d4.baseChart({})
+      .mixin([{
+        'name': 'circles',
+        'feature': d4.features.forcedCircle
+      }])
+      .using('circles', function(circle) {
+        circle.beforeRender(function(data) {
+          var d = data.map(function(d) {
+            return d.values;
+          })[0];
+          circle.force
+            .nodes(d)
+            .gravity(0.05)
+            .charge(-20)
+            .size([this.width, this.height])
+            .start();
+          return d;
+        })
+          .on('mouseup', function(d,i) {
+            if (d.selected === true) {
+              d.selected = false;
+              d.radius = d.oldRadius;
+              d.fixed = false;
+              circle.selectedIndex = undefined;
+            } else {
+              circle.selectedIndex = i;
+              d.selected = true;
+              d.oldRadius = d.radius;
+              d.radius = 150;
+              d.fixed = true;
+            }
+            circle.force.resume();
+          }.bind(this))
+          .afterRender(function(scope, data, selection, elements) {
+            circle.force.on('tick', function() {
+              var q = d3.geom.quadtree(data),
+                i = 0,
+                n = data.length;
+
+              while (++i < n) {
+                q.visit(collide(data[i]));
+              }
+
+              elements
+              .transition()
+              .duration(100)
+                .attr('cx', function(d) {
+                  return d.x;
+                })
+                .attr('cy', function(d) {
+                  return d.y;
+                })
+                .attr('class', function(d, i){
+                  return (i === circle.selectedIndex) ? 'selected' : '';
+                })
+                .attr('r', function(d,i) {
+                  if(i !== circle.selectedIndex && d.oldRadius) {
+                    d.radius = d.oldRadius;
+                  }
+                  return Math.min(100, d.radius);
+                });
+            });
+          });
+      })
+      .outerWidth($example.width())
+      .outerHeight($example.height());
+
+    d3.select($example[0])
+      .datum(data)
+      .call(chart);
+
+
+div(id="html")
+  #chart

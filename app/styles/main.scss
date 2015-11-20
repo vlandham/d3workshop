@@ -1,0 +1,84 @@
+@import "palette";
+@import "defaults";
+@import "pages/lessons";
+@import "components/code-editor";
+@import "components/icons";
+@import "components/mixins";
+@import "components/pages";
+@import "components/type";
+
+a {
+  text-decoration: none;
+  color: $scDarkBlue !important;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  cursor: pointer;
+
+  &:hover {
+    color: $scLightBlue;
+  }
+}
+pre {
+  background-color: #efefef;
+  padding:8px;
+  font-size: 16px;
+  line-height: 1.5;
+  code {
+    background-color: #efefef;
+    color: #356CA7;
+  }
+}
+.code {
+  background-color: #efefef;
+  color: #356CA7;
+  display: inline-block;
+  padding: 0 2px;
+  margin: 0 2px;
+  text-align: center;
+}
+.md-button {
+  .mdi {
+    margin-right: 8px;
+  }
+}
+.md-button.md-icon-button {
+  .mdi {
+    margin-right: 0;
+  }
+}
+.page-container {
+  background-color: #f1f1f1;
+  .mdi {
+    margin-right: 8px;
+  }
+}
+
+md-sidenav {
+  .options {
+    .md-button {
+      text-align: left;
+      .mdi {
+        margin-right: 24px;
+      }
+    }
+  }
+}
+
+.primaryToolbar {
+  background-color: $scMediumGrey !important;
+  //color: rgba(0,0,0,0.8) !important;
+  .md-button {
+    //color: rgba(0,0,0,0.8) !important;
+  }
+}
+md-menu-divider {
+  display:block;
+}
+md-menu-content {
+  i.mdi {
+    margin-right:1em;
+  }
+}
+.welcome {
+  max-width: 600px;
+}

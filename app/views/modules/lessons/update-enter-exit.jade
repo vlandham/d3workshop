@@ -1,0 +1,73 @@
+div(id="description")
+  h3.md-headline Update, Enter, and Exit
+  p.md-body-1 We learned the previous lesson how D3 uses selections to modify collections of DOM nodes to render the visualization. One of the most misunderstood concepts of D3 is how selections are created, reused or destroyed. It can seem anti-intuitive to developers who have never used D3 before, that the library can apply a transformation to DOM elements which may or may not exist. 
+  p.md-body-1 
+    | D3 has the 
+    code.code append() 
+    | function, which will create a DOM element and attach it to a parent node. Naively, we might assume that we’d loop through the data array and manually create elements, one for each item in the array. That might work, but what if we need to update an existing node, or delete one which was no longer needed? D3 has a better way to handle this rather than creating a collection of manual loops. 
+  p.md-body-1 
+    | D3 modifies these selections through a collection of contextual cycles that loop over the selected nodes. D3 names these cycles “Update”, “Enter”, and “Exit.” The update cycle runs implicitly. In fact, you cannot call it directly. However, it is possible to call the 
+    code.code exit() 
+    | and 
+    code.code enter() 
+    | functions as we’ll see. 
+  p.md-body-1
+    | The process flow looks like this:
+    ol
+      li.md-body-1 D3 joins the data to the current selection (which may or may not have corresponding DOM elements). 
+      li.md-body-1 D3 uses the joined selection to update the current nodes during the update cycle. 
+      li.md-body-1 
+        | If there is data left over, i.e. not enough DOM nodes to support the data, those extra data elements are passed to the 
+        code.code enter() 
+        | cycle. 
+      li.md-body-1 
+        | In contrast, if there are too many DOM nodes for the data, those elements are passed to the 
+        code.code exit() 
+        | cycle. 
+  p.md-body-1 
+    | When changes are made within the 
+    code.code exit() 
+    | or 
+    code.code enter() 
+    | functions, those changes are scoped to just the subset of elements provided to the function. For example, calling 
+    code.code selection.exit().remove(); 
+    | would only remove those DOM elements D3 has determined do not map to an item in the data array.
+
+
+  h5.md-title Exercises
+  ol
+    li.md-body-1 Try removing the unneeded div elements from our chart without modifying the HTML.
+    li.md-body-1 How would you rewrite this code so that we get just enough elements for a given data array?
+
+  h5.md-title Takeaways
+  p.md-body-1
+    | D3 modifies a collection of nodes through contextual cycles, which run when nodes need to be created, updated, or destroyed. For more information on how these cycles work see the article “Thinking with Joins.” 
+    a(href="http://bost.ocks.org/mike/join/" target="_new") http://bost.ocks.org/mike/join/
+
+style(id="css").
+  #chart div {
+    font: 10px sans-serif;
+    background-color: steelblue;
+    text-align: right;
+    padding: 3px;
+    margin: 1px;
+    color: white;
+  }
+
+script(id='data').
+  var data = [1,2,3,4];
+
+script(id='javascript').
+  d3.select("#chart")
+  .selectAll("div")
+  .data(data)
+  .style("width", function(d) { return d * 10 + "px"; })
+  .text(function(d) { return d; });
+
+div(id="html")
+  div#chart
+    div#one
+    div#two
+    div#thee
+    div#four
+    div#five

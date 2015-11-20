@@ -1,0 +1,36 @@
+$zmdi-font-name: "Material-Design-Iconic-Font" !default;
+$zmdi-font-path: "." !default;
+$zmdi-css-prefix: mdi !default;
+$zmdi-icon-prefix: mdi !default;
+$zmdi-version: "2.1.1" !default;
+
+$zmdi-border-color: #9E9E9E !default;
+$zmdi-inverse: #FFFFFF !default;
+$zmdi-li-width: 30em / 14 !default;
+
+$md-css-prefix: mdi !default;
+$md-icon-prefix: mdi !default;
+
+$md-border-color: #9E9E9E !default;
+
+// Font path
+// --------------------------
+
+@font-face {
+  font-family: #{$zmdi-font-name};
+  src: font-url("#{$zmdi-font-path}/Material-Design-Iconic-Font.woff?v=#{$zmdi-version}") format("woff"), font-url("#{$zmdi-font-path}/Material-Design-Iconic-Font.ttf?v=#{$zmdi-version}") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@import "material-design-iconic-font/scss/_core";
+@import "material-design-iconic-font/scss/_sizes";
+@import "material-design-iconic-font/scss/_fixed-width";
+@import "material-design-iconic-font/scss/_list";
+@import "material-design-iconic-font/scss/_border";
+@import "material-design-iconic-font/scss/_pulled";
+@import "material-design-iconic-font/scss/_spinned";
+@import "material-design-iconic-font/scss/_rotated";
+@import "material-design-iconic-font/scss/_stacked";
+@import "material-design-iconic-font/scss/_icons";
+@import "material-design-iconic-font/scss/_aliases";

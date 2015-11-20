@@ -1,0 +1,143 @@
+div(id="description")
+  h3.md-headline Working with Data
+  p.md-body-1 One of D3’s greatest strengths, is the flexibility it affords the developer in working with data. D3 natively parses data in a variety of input formats. D3 has built-in parsers for tab separated values (TSV), comma separated values (CSV), and JSON. D3 also has a rich geospatial library for parsing and building maps, which is outside the scope of this workshop. 
+  p.md-body-1 Before you can display data within your visualization it must be imported. Loading data into D3 is a portion of the larger process on sanitizing and preparing your data commonly referred to as “extract, transform, and load” (ETL.) This lesson deals with the last two stages of that workflow. D3’s data loaders retrieve the remote file asynchronously. Once loaded these loader functions pass the data (or error state) to the callback function. You can see this working in the current example. This process is obviously the load portion of the ETL flow. 
+  p.md-body-1 The transform step is a bit more nuanced. The first portion of the transform step happens within the D3 data loading helper. For example, a TSV file will be transformed into an array of objects, whose keys map to the header attributes of the TSV file. Consider this example:
+  pre
+    code.
+      d3.tsv("data.tsv",
+            function(error, data) {
+                callbackError = error;
+                callbackData = data;
+             list.selectAll("ul")
+             .data(data)
+             .enter()
+             .append("li")
+             .text(function(d) { return d.petalLength; })
+
+        });
+  p.md-body-1 
+    | Once D3 has coerced the remote data into objects which are usable within D3, it is important to bind these objects to their visual representation in a consistent manner. This is achieved by using the 
+    span.code key()
+    | function. The key function can be appended as an extra argument to a 
+    span.code selection() 
+    | call. This 
+    span.code key() 
+    | function is used to achieve object consistency, which allows graphical elements to be tracked by the viewer as they transition between states. 
+  p.md-body-1 Here is an example of using the key function within our previous example:
+  pre
+    code.
+      var bar = svg.selectAll(".bar")
+        .data(data, function(d) { return d. petalLength; });
+
+  p.md-body-1 
+    | Loading Remote Data
+    | Data loading is asyncronous, and you need to prepare your interface for it.  
+  
+  h3.md-title Exercises
+  ol
+    li.md-body-1 Replace the CSV code for the JSON file of the same name.
+    li.md-body-1 Write a function that takes the loaded data and displays it as an HTML table below the chart.
+    li.md-body-1 How would you display a notice to the viewer that data is incoming?
+      
+style(id="css").
+  path.area {
+    fill: steelblue;
+  }
+
+  .axis text {
+    font: 10px sans-serif;
+  }
+
+  .axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+
+
+
+script(id='data').
+
+script(id='javascript').
+  // Based on http://bost.ocks.org/mike/d3/workshop/area-chart.html
+  var format = d3.time.format("%b %Y");
+
+  var margin = {
+     top: 10,
+     right: 50,
+     bottom: 50,
+     left: 0
+  },
+     width = $('body').width(),
+     height =$('body').width();
+
+  var x = d3.time.scale()
+     .range([0, width - margin.left - margin.right]);
+
+  var y = d3.scale.linear()
+     .range([height - margin.top - margin.bottom, 0]);
+
+  var xAxis = d3.svg.axis()
+     .scale(x)
+     .orient("bottom")
+     .tickPadding(8);
+
+  var yAxis = d3.svg.axis()
+     .scale(y)
+     .orient("right")
+     .tickPadding(8);
+
+  var area = d3.svg.area()
+     .x(function(d) {
+         return x(d.date);
+     })
+     .y0(y.range()[0])
+     .y1(function(d) {
+         return y(d.price);
+     });
+
+  d3.csv("/data/stocks.csv", function(data) {
+     data.forEach(function(d) {
+         d.price = +d.price;
+         d.date = format.parse(d.date);
+     });
+
+     data = data.filter(function(d) {
+         return d.symbol == "S&P 500";
+     });
+
+     x.domain(d3.extent(data, function(d) {
+         return d.date;
+     }));
+     y.domain([0, d3.max(data, function(d) {
+         return d.price;
+     })]).nice();
+
+     var svg = d3.select("body").append("svg")
+         .datum(data)
+         .attr("width", width)
+         .attr("height", height)
+         .attr("class", "time chart")
+         .append("g")
+         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+     svg.append("g")
+         .attr("class", "x axis")
+         .attr("transform", "translate(0," + y.range()[0] + ")")
+         .call(xAxis);
+
+     svg.append("g")
+         .attr("class", "y axis")
+         .attr("transform", "translate(" + x.range()[1] + ")")
+         .call(yAxis);
+
+     svg.append("path")
+         .attr("class", "area")
+         .attr("d", area);
+
+  });
+
+
+
+div(id="html")

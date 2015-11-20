@@ -1,0 +1,54 @@
+div(id="description")
+  h3.md-headline Your Turn
+  p.md-body-1. 
+    Working in groups and using the dataset provided, try and come up with a 
+    compelling data visualization for it. Here are some questions to ask yourself before starting:
+    
+  ul
+    li.md-body-1 What are the compelling stories this data is telling you?
+    li.md-body-1 What do you want to tell the viewer?
+    li.md-body-1 What is the most appropriate visuals for my story?
+    li.md-body-1 Do I have a point I am trying to make or do I want to be seen as unbiased?
+  
+  p.md-body-1. 
+    Feel free to consult the previous lessons in this workshop if you have questions
+    about how you might perform a given task with D3.
+  
+  p.md-headline. 
+    NOTE: Make sure to save your work locally to ensure you don't lose your progress.
+  
+
+style(id="css").
+  table td{
+    font-size:11px;
+    border: 1px solid #efefef;
+  }
+
+script(id='data').
+
+script(id='javascript').
+  var data, columns;
+  var prepareData = function(data) {
+    var columns = d3.keys(data[0]).sort();
+    d3.select('body')
+    .append('table').append('tr').attr('id', 'headers')
+    var ths = d3.select('#headers').selectAll('th').data(columns);
+    ths.enter().append('th').text(function(d){
+      return d;
+    });
+    var trs = d3.select('table').selectAll('tr').data(data);
+    trs.enter().append('tr')
+    .attr('id', function(d,i){
+      return 'row_' + i;
+    })
+    .each(function(d,n,p){
+      var row = d3.select('tr#row_' + n).selectAll('td').data(columns)
+      row.enter().append('td').text(function(key){
+        return d[key];
+      });
+    })
+  };
+
+  d3.csv("/data/migrants.csv", prepareData);
+
+div(id="html")
